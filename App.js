@@ -81,7 +81,7 @@ export default function App() {
       </ScrollView>
     </View>
   );
-}
+}     
 
 const styles = StyleSheet.create({
   container: {
