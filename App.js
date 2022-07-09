@@ -1,7 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useRef } from "react";
+import 'react-native-gesture-handler';
 import axios from 'axios';
-
+import {useRef, useEffect} from 'react';
+import AppForm from './app/compos/AppForm';
+import UserProfile from './app/compos/UserProfile';
+import ImageUpload from './app/compos/ImageUpload';
+import {createStackNavigator} from '@react-navigation/stack'
+import {NavigationContainer} from '@react-navigation/native'
+ 
 import {
   StyleSheet,
   View,
@@ -10,12 +16,16 @@ import {
   Animated,
 } from "react-native";
 
+
+
 //=========components importing==============
 import FormHeader from "./app/compos/FormHeader";
 import FormSelectorBtn from "./app/compos/FormSelectorBtn";
 import LoginForm from "./app/compos/LoginForm";
 import SignUpForm from "./app/compos/SignUpForm";
 
+
+const Stack = createStackNavigator();
 export default function App() {
   const { width } = Dimensions.get("window");
   const animation = useRef(new Animated.Value(0)).current;
@@ -44,81 +54,22 @@ const fetchApi  = async() =>{
     outputRange: [1, 0],
   });
 
-
-  const loginColorInterpolate = animation.interpolate({
-    inputRange: [0, width],
-    outputRange: ["rgba(27, 27, 51, 1)", "rgba(27, 27, 51, 0.4)"],
-  });
-  const signUpColorInterpolate = animation.interpolate({
-    inputRange: [0, width],
-    outputRange: ["rgba(27, 27, 51, 0.3)", "rgba(27, 27, 51, 1)"],
-  });
-
+  const StackNavigator = ()=>{
+    return(
+      <Stack.Navigator screenOptions={{headerShown:false}}>
+      <Stack.Screen component={AppForm} name='AppForm'/>
+      <Stack.Screen component={ImageUpload} name="ImageUpload"/>
+      <Stack.Screen component={UserProfile} name="UserProfile"/>
+    </Stack.Navigator>
+    )
+  }
 
   return (
-    <View style={{ flex: 1, paddingTop: 80 }}>
-
-
-
-
-      {/*============= header component */}
-      <View style={styles.header}>
-        <FormHeader
-          leftHeading={"MDA"}
-          rightHeading={"Welcome"}
-          subHeading={"BauHouse"}
-          rightHeaderOpacity={rightHeaderOpacity}
-  
-        />
-      </View>
-
-
-
-
-
-      {/*============= FormSelectorBtn */}
-      <View style={{ flexDirection: "row", paddingHorizontal: 10 }}>
-        <FormSelectorBtn
-          backgroundColor={loginColorInterpolate}
-          title={"Login"}
-          onPress={() => scrollView.current.scrollTo({ x: 0 })}
-        />
-        <FormSelectorBtn
-          backgroundColor={signUpColorInterpolate}
-          title={"Signup"}
-          onPress={() => scrollView.current.scrollTo({ x: width })}
-        />
-      </View>
-
-
-
-
-      {/*================== FormLogin sigin up=========*/}
-      <ScrollView
-        ref={scrollView}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { x: animation } } }],
-          { useNativeDriver: false }
-        )}
-      >
-        <LoginForm></LoginForm>
-        <ScrollView>
-          <SignUpForm></SignUpForm>
-        </ScrollView>
-      </ScrollView>
-
-
-
-
-      
-    </View>
+    <NavigationContainer>
+    <StackNavigator/>
+  </NavigationContainer>
   );
 }     
-
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
@@ -129,4 +80,4 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
   }
-});
+})

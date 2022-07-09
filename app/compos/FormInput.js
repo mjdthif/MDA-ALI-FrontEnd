@@ -8,7 +8,7 @@ const FormInput = props => {
       <View
         style={{
           flexDirection: 'row',
-          justifyContent: 'space-between',
+          // justifyContent: 'space-between',
           marginBottom: 5,
         }}
       >
@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: '#ddd',
-    padding:10, 
+    padding:2, 
     height: 35,
-    borderRadius: 8,
-    fontSize: 16,
-    paddingLeft: 10,
-    marginBottom: 20,
+    borderRadius: 2,
+    fontSize: 18,
+    paddingLeft: 2,
+    marginBottom: 10,
   },
 });
 

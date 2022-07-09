@@ -6,6 +6,7 @@ import FormSubmitBtn from "./FormSubmitBtn";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import client from "./api/client";
+import { StackActions } from "@react-navigation/native";
 
 
 
@@ -14,7 +15,7 @@ const validationSchema = Yup.object({
     .trim()
     .min(3, "invalid name")
     .required("Name is required"),
-  email: Yup.string().email("Invalid name!").required("Name is required"),
+  email: Yup.string().email("Invalid email!").required("Name is required"),
   password: Yup.string()
     .trim()
     .min(8, "Password must be more than 8")
@@ -24,7 +25,7 @@ const validationSchema = Yup.object({
 
 
 
-const SignUpForm = () => {
+const SignUpForm = ({navigation}) => {
 
 
   const userInfo = {
@@ -40,21 +41,33 @@ const SignUpForm = () => {
 
   // const { fullname, email, password, confirmPassword } = userInfo;
 
-  const submitForm = () => {
-    if (isValidForm()) {
-      console.log("wull be pass to the backEnd server");
-    }
-  };
+  // const submitForm = () => {
+  //   if (isValidForm()) {
+  //     console.log("wull be pass to the backEnd server");
+  //   }
+  // };
+
+
+  
 
  const signUp =  async (values, formikActions) => {
        const res = await client.post('/create-user', {
           ...values, 
         });
-      console.log(res.data)
+    if(res.data.success){
+      const signInRes = await client.post('/sign-in',{email:values.email, password:values.password})
+      if(signInRes.data.success){
+        navigation.dispatch(
+          StackActions.replace('ImageUpload', {
+            token:signInRes.data.token,
+          })
+        )
+      }
+    }
       formikActions.resetForm();
       formikActions.setSubmitting(false)
-
 }
+
   return (
     <FormContainer style={styles.container}>
       <Formik
@@ -100,7 +113,7 @@ const SignUpForm = () => {
             secureTextEntry
             autoCapitalize="none"
             title="Password"
-            placeholder="*********"
+            placeholder="********"
           />
           <FormInput
             value={confirmPassword}
@@ -110,7 +123,7 @@ const SignUpForm = () => {
             secureTextEntry
             autoCapitalize="none"
             title="Confirm Password"
-            placeholder="************"
+            placeholder="********"
           />
           <FormSubmitBtn submitting={isSubmitting} onPress={handleSubmit} title="Sign up" />
         </View>

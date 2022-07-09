@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
             marginTop:10, 
             height:45, 
             borderRadius:8, 
-            justifyContent:'center', 
+            // justifyContent:'center', 
             alignItems:'center',
         }, 
         btn:{
